@@ -1,7 +1,15 @@
 import { useLocalSearchParams } from "expo-router";
-import { Keyboard, Text, TouchableWithoutFeedback, View } from "react-native";
+import {
+  FlatList,
+  Keyboard,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import chatHistory from "@/assets/data/chatHistory.json";
 import ChatInput from "@/components/chat-input";
+import MessageListItem from "@/components/message-list-item";
+import { Message } from "@/types/message";
 
 export default function ChatScreen() {
   const { id } = useLocalSearchParams();
@@ -23,9 +31,11 @@ export default function ChatScreen() {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View className="bg-black flex-1">
-        <View className="flex-1">
-          <Text className="text-white">Chat Screen: {chat?.title}</Text>
-        </View>
+        <FlatList
+          data={chat?.messages as Message[]}
+          renderItem={({ item }) => <MessageListItem messageItem={item} />}
+          contentContainerStyle={{ paddingTop: 15 }}
+        />
 
         <ChatInput onSend={handleSend} isLoading={false} />
       </View>
