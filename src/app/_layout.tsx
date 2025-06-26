@@ -48,9 +48,9 @@ export default function RootLayout() {
               },
             }}
           />
-
-          <StatusBar style="auto" />
         </Drawer>
+
+        <StatusBar style="light" />
       </ThemeProvider>
     </GestureHandlerRootView>
   );
