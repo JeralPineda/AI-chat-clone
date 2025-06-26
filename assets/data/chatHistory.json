@@ -244,6 +244,26 @@
         "id": "10-4",
         "role": "assistant",
         "message": "Consider Budapest, Hungary, or Chiang Mai, Thailand, for affordable yet vibrant experiences."
+      },
+      {
+        "id": "10-5",
+        "role": "user",
+        "message": "What are some other budget-friendly options?"
+      },
+      {
+        "id": "10-6",
+        "role": "assistant",
+        "message": "Consider Budapest, Hungary, or Chiang Mai, Thailand, for affordable yet vibrant experiences."
+      },
+      {
+        "id": "10-7",
+        "role": "user",
+        "message": "What are some other budget-friendly options?"
+      },
+      {
+        "id": "10-8",
+        "role": "assistant",
+        "message": "Consider Budapest, Hungary, or Chiang Mai, Thailand, for affordable yet vibrant experiences."
       }
     ]
   },

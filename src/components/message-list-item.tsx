@@ -1,5 +1,7 @@
 import { Message } from "@/types/message";
-import { Text, View } from "react-native";
+import { markdownStyles } from "@/utils/markdown";
+import { View } from "react-native";
+import Markdown from "react-native-markdown-display";
 
 export default function MessageListItem({
   messageItem,
@@ -16,7 +18,7 @@ export default function MessageListItem({
       <View
         className={`rounded-2xl p-4 ${isUser && "bg-[#262626]"} max-w-[70%]`}
       >
-        <Text className="text-white">{message}</Text>
+        <Markdown style={markdownStyles}>{message}</Markdown>
       </View>
     </View>
   );
