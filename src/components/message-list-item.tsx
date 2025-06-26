@@ -1,13 +1,13 @@
-import { Message } from "@/types/message";
+import { Message } from "@/types/types";
 import { markdownStyles } from "@/utils/markdown";
 import { View } from "react-native";
 import Markdown from "react-native-markdown-display";
 
-export default function MessageListItem({
-  messageItem,
-}: {
+interface MessageListItemProps {
   messageItem: Message;
-}) {
+}
+
+export default function MessageListItem({ messageItem }: MessageListItemProps) {
   const { role, message } = messageItem;
   const isUser = role === "user";
 

@@ -1,7 +1,7 @@
 import chatHistory from "@/assets/data/chatHistory.json";
 import ChatInput from "@/components/chat-input";
 import MessageListItem from "@/components/message-list-item";
-import { Message } from "@/types/message";
+import { Message } from "@/types/types";
 import { useLocalSearchParams } from "expo-router";
 import { FlatList, Text, View } from "react-native";
 

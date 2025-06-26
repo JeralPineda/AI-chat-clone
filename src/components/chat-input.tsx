@@ -9,13 +9,12 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function ChatInput({
-  onSend,
-  isLoading,
-}: {
+interface ChatInputProps {
   onSend: (message: string) => Promise<void>;
   isLoading?: boolean;
-}) {
+}
+
+export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
   const insets = useSafeAreaInsets();
   const [message, setMessage] = useState("");
 
