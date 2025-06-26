@@ -1,12 +1,11 @@
 import "../../global.css";
 
-import { Drawer } from "expo-router/drawer";
-import { StyleSheet, Text } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import HistoryChatDrawer from "@/components/history-chat-drawer";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
-import HistoryChatDrawer from "@/components/history-chat-drawer";
+import { Drawer } from "expo-router/drawer";
+import { StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const myTheme = {
   ...DarkTheme,
@@ -27,7 +26,7 @@ export default function RootLayout() {
             headerStyle: { backgroundColor: "black" },
             drawerInactiveTintColor: "white",
             drawerStyle: {
-              borderRightColor: "gray",
+              borderRightColor: "#363636a1",
               borderRightWidth: StyleSheet.hairlineWidth,
             },
           }}
@@ -36,7 +35,9 @@ export default function RootLayout() {
             name="index"
             options={{
               drawerLabel: "ChatGPT",
-              drawerIcon: ({ focused, color, size }) => <FontAwesome5 name="atom" size={18} color="white" />,
+              drawerIcon: () => (
+                <FontAwesome5 name="atom" size={18} color="white" />
+              ),
             }}
           />
 
@@ -49,8 +50,6 @@ export default function RootLayout() {
             }}
           />
         </Drawer>
-
-        <StatusBar style="light" />
       </ThemeProvider>
     </GestureHandlerRootView>
   );
