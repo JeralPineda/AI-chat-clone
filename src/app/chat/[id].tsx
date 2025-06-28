@@ -1,19 +1,25 @@
 import ChatInput from "@/components/chat-input";
 import MessageListItem from "@/components/message-list-item";
 import { useChatStore } from "@/store/chat-store";
-import { Message } from "@/types/types";
 import { useLocalSearchParams } from "expo-router";
+import { useEffect, useRef } from "react";
 import { FlatList, Text, View } from "react-native";
 
 export default function ChatScreen() {
-  const { id } = useLocalSearchParams();
-
+  const flatListRef = useRef<FlatList | null>(null);
+  const { id } = useLocalSearchParams<{ id: string }>();
   const chat = useChatStore((state) =>
     state.chatHistory.find((chat) => chat.id === id)
   );
   const addNewMessage = useChatStore((state) => state.addNewMessage);
 
-  console.log("🚀 [id].tsx -> #16 -> chat ~", JSON.stringify(chat, null, 2));
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      flatListRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [chat?.messages]);
 
   const handleSend = async (message: string) => {
     if (!chat) return;
@@ -67,9 +73,11 @@ export default function ChatScreen() {
   return (
     <View className="bg-black flex-1">
       <FlatList
-        data={chat?.messages as Message[]}
+        ref={flatListRef}
+        data={chat?.messages || []}
         renderItem={({ item }) => <MessageListItem messageItem={item} />}
-        showsVerticalScrollIndicator={false}
+        // showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingTop: 15 }}
       />
 
       <ChatInput onSend={handleSend} isLoading={false} />
