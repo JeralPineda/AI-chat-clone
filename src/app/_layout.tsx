@@ -4,6 +4,7 @@ import HistoryChatDrawer from "@/components/history-chat-drawer";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { Drawer } from "expo-router/drawer";
+import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -50,6 +51,8 @@ export default function RootLayout() {
             }}
           />
         </Drawer>
+
+        <StatusBar style="light" />
       </ThemeProvider>
     </GestureHandlerRootView>
   );
