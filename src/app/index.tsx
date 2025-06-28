@@ -17,7 +17,7 @@ export default function HomeScreen() {
     router.push(`/chat/${newChatId}`);
 
     try {
-      const response = await fetch("http://localhost:8081/api/chat");
+      const response = await fetch("/api/chat");
       const data = await response.json();
       console.log("🚀 index.tsx -> #22 -> data ~", data);
     } catch (error) {
