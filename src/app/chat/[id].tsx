@@ -3,7 +3,7 @@ import MessageListItem from "@/components/message-list-item";
 import { useChatStore } from "@/store/chat-store";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useRef } from "react";
-import { FlatList, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 
 export default function ChatScreen() {
   const flatListRef = useRef<FlatList | null>(null);
@@ -12,6 +12,12 @@ export default function ChatScreen() {
     state.chatHistory.find((chat) => chat.id === id)
   );
   const addNewMessage = useChatStore((state) => state.addNewMessage);
+  const setIsWaitingForResponse = useChatStore(
+    (state) => state.setIsWaitingForResponse
+  );
+  const isWaitingForResponse = useChatStore(
+    (state) => state.isWaitingForResponse
+  );
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -23,6 +29,8 @@ export default function ChatScreen() {
 
   const handleSend = async (message: string, imageBase64: string | null) => {
     if (!chat) return;
+
+    setIsWaitingForResponse(true);
 
     addNewMessage(chat.id, {
       id: Date.now().toString(),
@@ -61,6 +69,8 @@ export default function ChatScreen() {
       addNewMessage(chat.id, aiResponseMessage);
     } catch (error) {
       console.error("Chat error:", error);
+    } finally {
+      setIsWaitingForResponse(false);
     }
   };
 
@@ -80,9 +90,16 @@ export default function ChatScreen() {
         renderItem={({ item }) => <MessageListItem messageItem={item} />}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingTop: 15 }}
+        ListFooterComponent={() =>
+          isWaitingForResponse && (
+            <Text className="text-gray-400 px-6 mb-4 animate-pulse">
+              Waiting for response...
+            </Text>
+          )
+        }
       />
 
-      <ChatInput onSend={handleSend} isLoading={false} />
+      <ChatInput onSend={handleSend} />
     </View>
   );
 }

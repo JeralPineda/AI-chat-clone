@@ -7,8 +7,13 @@ import { Message } from "@/types/types";
 export default function HomeScreen() {
   const createNewChat = useChatStore((state) => state.createNewChat);
   const addNewMessage = useChatStore((state) => state.addNewMessage);
+  const setIsWaitingForResponse = useChatStore(
+    (state) => state.setIsWaitingForResponse
+  );
 
   const handleSend = async (message: string, imageBase64: string | null) => {
+    setIsWaitingForResponse(true);
+
     const newChatId = createNewChat(message.slice(0, 50));
 
     addNewMessage(newChatId, {
@@ -43,6 +48,8 @@ export default function HomeScreen() {
       addNewMessage(newChatId, apiResponseMessage);
     } catch (error) {
       console.log("🚀 index.tsx -> #21 -> Chat error ~", error);
+    } finally {
+      setIsWaitingForResponse(false);
     }
   };
 
@@ -53,7 +60,7 @@ export default function HomeScreen() {
           <Text className="text-white text-3xl font-semibold">Hello World</Text>
         </View>
 
-        <ChatInput onSend={handleSend} isLoading={false} />
+        <ChatInput onSend={handleSend} />
       </View>
     </TouchableWithoutFeedback>
   );

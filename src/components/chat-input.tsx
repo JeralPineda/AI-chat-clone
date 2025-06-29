@@ -10,16 +10,20 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
+import { useChatStore } from "@/store/chat-store";
 
 interface ChatInputProps {
   onSend: (message: string, imageBase64: string | null) => Promise<void>;
-  isLoading?: boolean;
 }
 
-export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
+export default function ChatInput({ onSend }: ChatInputProps) {
   const insets = useSafeAreaInsets();
   const [message, setMessage] = useState("");
   const [imageBase64, setImageBase64] = useState<string | null>(null);
+
+  const isWaitingForResponse = useChatStore(
+    (state) => state.isWaitingForResponse
+  );
 
   const handleSend = async () => {
     setMessage("");
@@ -77,6 +81,7 @@ export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
           multiline
           className="pt-6 pb-2 px-4 text-white"
           keyboardAppearance="dark"
+          editable={!isWaitingForResponse}
         />
 
         <View className="flex-row justify-between px-4 items-center">
@@ -85,6 +90,7 @@ export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
             size={24}
             color="white"
             onPress={pickImage}
+            disabled={isWaitingForResponse}
           />
 
           {!!message || imageBase64 ? (
@@ -94,7 +100,7 @@ export default function ChatInput({ onSend, isLoading }: ChatInputProps) {
               color="white"
               className="ml-auto"
               onPress={handleSend}
-              disabled={isLoading}
+              disabled={isWaitingForResponse}
             />
           ) : (
             <View className="flex-row ml-auto bg-white rounded-full p-2 items-center gap-1">
