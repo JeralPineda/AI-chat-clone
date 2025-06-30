@@ -2,7 +2,7 @@
   "expo": {
     "name": "AIChatClone",
     "slug": "AIChatClone",
-    "scheme": "aichatclone", // aichatclone://chat/1
+    "scheme": "aichatclone",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -39,6 +39,12 @@
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
         }
       ]
     ]
