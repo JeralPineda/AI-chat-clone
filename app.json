@@ -21,7 +21,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -32,7 +36,7 @@
       [
         "expo-router",
         {
-          "origin": "http://localhost:8081"
+          "origin": "https://jeral495-aichatclone.expo.app"
         }
       ],
       [
@@ -47,6 +51,14 @@
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": "https://jeral495-aichatclone.expo.app"
+      },
+      "eas": {
+        "projectId": "48930965-6248-4121-b623-25eab0c55fbc"
+      }
+    }
   }
 }
