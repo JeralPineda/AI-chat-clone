@@ -16,7 +16,7 @@ export default function MessageListItem({ messageItem }: MessageListItemProps) {
       {!!image && (
         <Image
           source={{ uri: image }}
-          className="w-40 h-40 rounded-lg mb-2"
+          className={`rounded-lg mb-2 ${isUser ? "w-40 h-40" : "w-full aspect-square"}`}
           resizeMode="cover"
         />
       )}

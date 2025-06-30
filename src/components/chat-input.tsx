@@ -13,13 +13,18 @@ import * as ImagePicker from "expo-image-picker";
 import { useChatStore } from "@/store/chat-store";
 
 interface ChatInputProps {
-  onSend: (message: string, imageBase64: string | null) => Promise<void>;
+  onSend: (
+    message: string,
+    imageBase64: string | null,
+    isImageGeneration: boolean
+  ) => Promise<void>;
 }
 
 export default function ChatInput({ onSend }: ChatInputProps) {
   const insets = useSafeAreaInsets();
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string>("");
   const [imageBase64, setImageBase64] = useState<string | null>(null);
+  const [isImageGeneration, setIsImageGeneration] = useState<boolean>(false);
 
   const isWaitingForResponse = useChatStore(
     (state) => state.isWaitingForResponse
@@ -30,9 +35,9 @@ export default function ChatInput({ onSend }: ChatInputProps) {
     setImageBase64(null);
 
     try {
-      await onSend(message.trim(), imageBase64);
+      await onSend(message.trim(), imageBase64, isImageGeneration);
     } catch (error) {
-      console.error("Failed to send message:", error);
+      console.log("🚀 chat-input.tsx -> #36 -> error ~", error);
     }
   };
 
@@ -84,13 +89,20 @@ export default function ChatInput({ onSend }: ChatInputProps) {
           editable={!isWaitingForResponse}
         />
 
-        <View className="flex-row justify-between px-4 items-center">
+        <View className="flex-row px-4 items-center gap-2">
           <MaterialCommunityIcons
             name="plus"
             size={24}
             color="white"
             onPress={pickImage}
             disabled={isWaitingForResponse}
+          />
+
+          <MaterialCommunityIcons
+            name="palette"
+            size={24}
+            color={isImageGeneration ? "royalblue" : "gray"}
+            onPress={() => setIsImageGeneration(!isImageGeneration)}
           />
 
           {!!message || imageBase64 ? (

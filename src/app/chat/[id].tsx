@@ -1,9 +1,11 @@
 import ChatInput from "@/components/chat-input";
 import MessageListItem from "@/components/message-list-item";
+import { createAIImage, getTextResponse } from "@/services/chat-service";
 import { useChatStore } from "@/store/chat-store";
+import { Message } from "@/types/types";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useRef } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 export default function ChatScreen() {
   const flatListRef = useRef<FlatList | null>(null);
@@ -27,7 +29,11 @@ export default function ChatScreen() {
     return () => clearTimeout(timeout);
   }, [chat?.messages]);
 
-  const handleSend = async (message: string, imageBase64: string | null) => {
+  const handleSend = async (
+    message: string,
+    imageBase64: string | null,
+    isImageGeneration: boolean
+  ) => {
     if (!chat) return;
 
     setIsWaitingForResponse(true);
@@ -43,28 +49,26 @@ export default function ChatScreen() {
       chat.messages[chat.messages.length - 1]?.responseId;
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message,
-          imageBase64,
-          previousResponseId,
-        }),
-      });
+      let data;
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error);
+      if (isImageGeneration) {
+        data = await createAIImage(message);
+      } else {
+        data = await getTextResponse(message, imageBase64, previousResponseId);
       }
 
-      const aiResponseMessage = {
-        id: Date.now().toString(),
-        message: data.responseMessage,
-        responseId: data.responseId,
-        role: "assistant" as const,
-      };
+      const aiResponseMessage: Message = isImageGeneration
+        ? {
+            id: Date.now().toString(),
+            role: "assistant",
+            image: data.image,
+          }
+        : {
+            id: Date.now().toString(),
+            role: "assistant",
+            message: data.responseMessage,
+            responseId: data.responseId,
+          };
 
       addNewMessage(chat.id, aiResponseMessage);
     } catch (error) {

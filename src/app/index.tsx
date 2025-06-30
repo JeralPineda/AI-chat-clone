@@ -3,6 +3,7 @@ import ChatInput from "@/components/chat-input";
 import { useChatStore } from "@/store/chat-store";
 import { router } from "expo-router";
 import { Message } from "@/types/types";
+import { createAIImage, getTextResponse } from "@/services/chat-service";
 
 export default function HomeScreen() {
   const createNewChat = useChatStore((state) => state.createNewChat);
@@ -11,7 +12,11 @@ export default function HomeScreen() {
     (state) => state.setIsWaitingForResponse
   );
 
-  const handleSend = async (message: string, imageBase64: string | null) => {
+  const handleSend = async (
+    message: string,
+    imageBase64: string | null,
+    isImageGeneration: boolean
+  ) => {
     setIsWaitingForResponse(true);
 
     const newChatId = createNewChat(message.slice(0, 50));
@@ -26,26 +31,28 @@ export default function HomeScreen() {
     router.push(`/chat/${newChatId}`);
 
     try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, imageBase64 }),
-      });
+      let data;
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error);
+      if (isImageGeneration) {
+        data = await createAIImage(message);
+      } else {
+        data = await getTextResponse(message, imageBase64);
       }
 
-      const apiResponseMessage: Message = {
-        id: Date.now().toString(),
-        message: data.responseMessage,
-        responseId: data.responseId,
-        role: "assistant",
-      };
+      const aiResponseMessage: Message = isImageGeneration
+        ? {
+            id: Date.now().toString(),
+            role: "assistant",
+            image: data.image,
+          }
+        : {
+            id: Date.now().toString(),
+            role: "assistant",
+            message: data.responseMessage,
+            responseId: data.responseId,
+          };
 
-      addNewMessage(newChatId, apiResponseMessage);
+      addNewMessage(newChatId, aiResponseMessage);
     } catch (error) {
       console.log("🚀 index.tsx -> #21 -> Chat error ~", error);
     } finally {
